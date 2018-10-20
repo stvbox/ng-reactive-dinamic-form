@@ -1,25 +1,33 @@
 
 
-<table [formGroup]="formGroup" >
-  <tr *ngFor="let field of formShema" >
-    <td>{{ field.name }}</td>
-    <td>
+<ng-template #fieldTemplate let-field="field" >
 
-      <div [ngSwitch]="field.type">
-        <div *ngSwitchCase="'string'">
-          <input [name]="field.name" [formControlName]="createControl(field)" />
+  <div class="field" >
+      <div class="field__title" >{{ field.name }}</div>
+      <div class="field__input" >
+        <div [ngSwitch]="field.type">
+          <div *ngSwitchCase="'string'">
+            <input [name]="field.name" [formControl]="createControl(field)" />
+          </div>
+          <div *ngSwitchCase="'number'">
+                  <input [name]="field.name" [formControl]="createControl(field)" />
+          </div>
+          <div *ngSwitchDefault>
+            <input [name]="field.name" [formControl]="createControl(field)" />
+          </div>
         </div>
-        <div *ngSwitchCase="'number'">
-            <input [name]="field.name" [formControlName]="createControl(field)" />
-        </div>
-        <div *ngSwitchDefault>
-            <input [name]="field.name" [formControlName]="createControl(field)" />
-        </div>
+        <ng-container *ngIf="field.items" >
+            <ng-container *ngFor="let field of field.items; trackBy: fieldsTrackByFn " >
+              <ng-content *ngTemplateOutlet="fieldTemplate; context: {field: field}" ></ng-content>
+            </ng-container>
+        </ng-container>
       </div>
+  </div>
+</ng-template>
 
-      <div style="border: 1px red solid;" >{{ field | json }}</div>
-
-    </td>
-  </tr>
-</table>
+<div [formGroup]="formGroup" >
+  <div *ngFor="let field of formShema" >
+      <ng-content *ngTemplateOutlet="fieldTemplate; context: {field: field}" ></ng-content>
+  </div>
+</div>
 <div style="border: 1px red solid; padding: 10px; margin: 10px;" >{{ formGroup.value | json }}</div>

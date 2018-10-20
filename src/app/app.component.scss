@@ -1,0 +1,17 @@
+.field {
+    display: flex;
+
+    .field__title {
+        width: 100px;
+        font-weight: bold;
+        border-bottom: 1px black solid;
+    }
+
+    .field__input {
+        border-bottom: 1px black solid;
+
+        input {
+            border: none;
+        }
+    }
+}
